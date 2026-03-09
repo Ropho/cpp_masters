@@ -1,0 +1,66 @@
+////////////////////////////////////////
+
+#include <cassert>
+#include <iostream>
+
+////////////////////////////////////////
+
+class Entity
+{
+public :
+
+	Entity(int x) : m_x(x) {}
+
+//  ------------------------------------
+
+	void test_v1() const
+	{
+		std::cout << "Entity::test_v1" << std::endl;
+
+		++s_y;
+	}
+
+//  ------------------------------------
+
+	static void test_v2()
+	{
+		std::cout << "Entity::test_v2" << std::endl;
+
+	//	++m_x; // error
+	}
+
+//  ------------------------------------
+
+//	static        auto s_x = 1; // error
+
+	static inline auto s_y = 2;
+
+private :
+
+	int m_x = 0;
+};
+
+////////////////////////////////////////
+
+int main()
+{
+	Entity entity(1);
+
+//  -------------------------
+
+	assert(Entity::s_y == 2);
+
+//  -------------------------
+
+	entity.test_v1();
+
+//  -------------------------
+
+	assert(Entity::s_y == 3);
+
+//  -------------------------
+
+	Entity::test_v2();
+}
+
+////////////////////////////////////////
