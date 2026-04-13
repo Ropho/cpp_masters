@@ -4,56 +4,54 @@
 #include <array>
 #include <cassert>
 #include <cstdint>
-#include <fstream>
 #include <functional>
 #include <iostream>
 #include <random>
-#include <string>
-#include <tuple>
 #include <unordered_map>
 #include <vector>
 
 namespace
 {
-template <typename T>
-auto hash_variadic(T x, auto... xs)
-{
-	auto seed = std::hash<T>{}(x);
 
-	if constexpr (sizeof...(xs) > 0)
+	template <typename T>
+	auto hash_variadic(T x, auto... xs)
 	{
-		seed += hash_variadic(xs...) * 31;
+		auto seed = std::hash<T>{}(x);
+
+		if constexpr (sizeof...(xs) > 0)
+		{
+			seed += hash_variadic(xs...) * 31;
+		}
+
+		return seed;
 	}
 
-	return seed;
-}
+	struct Entity
+	{
+		int x = 0;
+		int y = 0;
+	};
 
-struct Entity
-{
-	int x = 0;
-	int y = 0;
-};
+	auto hash_value(Entity const & entity)
+	{
+		std::size_t seed = 0;
 
-auto hash_value(Entity const & entity)
-{
-	std::size_t seed = 0;
+		boost::hash_combine(seed, entity.x);
+		boost::hash_combine(seed, entity.y);
 
-	boost::hash_combine(seed, entity.x);
-	boost::hash_combine(seed, entity.y);
+		return seed;
+	}
 
-	return seed;
-}
+	void demo_from_example_10_41()
+	{
+		std::ignore = hash_variadic(1, 2.0, std::string{"aaaaa"});
 
-void demo_from_example_10_41()
-{
-	std::ignore = hash_variadic(1, 2.0, std::string{"aaaaa"});
+		std::ignore = boost::hash<Entity>{}(Entity{1, 1});
 
-	std::ignore = boost::hash<Entity>{}(Entity{1, 1});
+		std::vector<int> vector = {1, 2, 3, 4, 5};
 
-	std::vector<int> vector = {1, 2, 3, 4, 5};
-
-	std::ignore = boost::hash_range(vector.begin(), vector.end());
-}
+		std::ignore = boost::hash_range(vector.begin(), vector.end());
+	}
 
 unsigned int RSHash(char const * str, unsigned int length)
 {

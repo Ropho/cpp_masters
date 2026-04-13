@@ -1,108 +1,130 @@
+#include "06.09.hpp"
+
+#include <bit>
 #include <cstddef>
 #include <iostream>
 #include <new>
+#include <utility>
 
-template<typename Derived>
-class Entity
+namespace
+{
+constexpr std::size_t k_entity_storage_bytes = 16;
+}
+
+static_assert(k_entity_storage_bytes == 16);
+
+class Entity::Implementation
 {
 public:
 
-	static void * operator new(std::size_t size)
+	Implementation()
+		: m_value(0)
 	{
-		std::cout << "Entity::operator new\n";
-		return ::operator new(size);
 	}
 
-	static void operator delete(void * pointer) noexcept
+	explicit Implementation(int value)
+		: m_value(value)
 	{
-		std::cout << "Entity::operator delete\n";
-		::operator delete(pointer);
 	}
 
-	static void * operator new[](std::size_t size)
+	Implementation(Implementation && other) noexcept
+		: m_value(other.m_value)
 	{
-		std::cout << "Entity::operator new[]\n";
-		return ::operator new[](size);
+		other.m_value = 0;
 	}
 
-	static void operator delete[](void * pointer) noexcept
+	void test() const
 	{
-		std::cout << "Entity::operator delete[]\n";
-		::operator delete[](pointer);
+		std::cout << "Implementation::test value=" << m_value << '\n';
 	}
 
-	static void * operator new(std::size_t size, std::nothrow_t const & tag) noexcept
+	int value() const
 	{
-		(void)tag;
-		std::cout << "Entity::operator new(std::nothrow_t)\n";
-		return ::operator new(size, std::nothrow);
+		return m_value;
 	}
 
-	static void operator delete(void * pointer, std::nothrow_t const & tag) noexcept
+	void set_value(int value)
 	{
-		(void)tag;
-		std::cout << "Entity::operator delete(void*, std::nothrow_t)\n";
-		::operator delete(pointer);
+		m_value = value;
 	}
 
-	static void * operator new[](std::size_t size, std::nothrow_t const & tag) noexcept
-	{
-		(void)tag;
-		std::cout << "Entity::operator new[](std::nothrow_t)\n";
-		return ::operator new[](size, std::nothrow);
-	}
+private:
 
-	static void operator delete[](void * pointer, std::nothrow_t const & tag) noexcept
-	{
-		(void)tag;
-		std::cout << "Entity::operator delete[](void*, std::nothrow_t)\n";
-		::operator delete[](pointer);
-	}
-
-protected:
-
-	Entity() = default;
+	int m_value{};
 };
 
-class Client : private Entity<Client>
+Entity::Entity()
 {
-public:
+	static_assert(sizeof(Implementation) <= k_entity_storage_bytes);
+	static_assert(alignof(Implementation) <= alignof(std::max_align_t));
 
-	Client()
+	::new (m_storage.data()) Implementation();
+}
+
+Entity::Entity(Entity && other) noexcept
+{
+	::new (m_storage.data()) Implementation(std::move(*other.get()));
+	std::destroy_at(other.get());
+	::new (other.m_storage.data()) Implementation();
+}
+
+Entity & Entity::operator=(Entity && other) noexcept
+{
+	if (this == &other)
 	{
-		std::cout << "Client::Client\n";
+		return *this;
 	}
 
-	~Client()
-	{
-		std::cout << "Client::~Client\n";
-	}
+	std::destroy_at(get());
 
-	using Entity<Client>::operator new;
-	using Entity<Client>::operator new[];
-	using Entity<Client>::operator delete;
-	using Entity<Client>::operator delete[];
-};
+	Implementation * const source = other.get();
+	::new (m_storage.data()) Implementation(std::move(*source));
+
+	std::destroy_at(source);
+	::new (other.m_storage.data()) Implementation();
+
+	return *this;
+}
+
+Entity::~Entity()
+{
+	std::destroy_at(get());
+}
+
+void Entity::test() const
+{
+	get()->test();
+}
+
+Entity::Implementation * Entity::get()
+{
+	return std::launder(std::bit_cast<Implementation *>(m_storage.data()));
+}
+
+Entity::Implementation const * Entity::get() const
+{
+	return std::launder(std::bit_cast<Implementation const *>(m_storage.data()));
+}
 
 int main()
 {
-	std::cout << "--- single object ---\n";
-	delete new Client;
+	Entity a;
 
-	std::cout << "--- array ---\n";
-	delete[] new Client[2];
+	a.test();
 
-	std::cout << "--- single nothrow ---\n";
-	if (Client * const p = new (std::nothrow) Client)
-	{
-		delete p;
-	}
+	a.get()->set_value(42);
 
-	std::cout << "--- array nothrow ---\n";
-	if (Client * const block = new (std::nothrow) Client[2])
-	{
-		delete[] block;
-	}
+	a.test();
+
+	Entity b = std::move(a);
+
+	b.test();
+
+	Entity c;
+
+	c = std::move(b);
+
+	c.test();
 
 	return 0;
 }

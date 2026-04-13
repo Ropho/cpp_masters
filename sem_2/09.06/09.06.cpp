@@ -1,160 +1,123 @@
-#include <array>
-#include <bit>
+#include <boost/iterator/iterator_facade.hpp>
+
+#include <cassert>
 #include <cstddef>
-#include <iostream>
-#include <new>
-#include <utility>
+#include <iterator>
+
+class Iterator
+	: public boost::iterator_facade<
+		  Iterator,
+		  int,
+		  boost::forward_traversal_tag,
+		  int>
+{
+public:
+
+	using iterator_category = std::forward_iterator_tag;
+
+	Iterator()
+		: m_current(0)
+		, m_next(1)
+	{
+	}
+
+private:
+
+	friend class boost::iterator_core_access;
+
+	void increment()
+	{
+		int const computed = m_current + m_next;
+		m_current = m_next;
+		m_next = computed;
+	}
+
+	bool equal(Iterator const & other) const
+	{
+		return m_current == other.m_current && m_next == other.m_next;
+	}
+
+	int dereference() const
+	{
+		return m_current;
+	}
+
+	int m_current{};
+	int m_next{};
+};
 
 namespace
 {
-constexpr std::size_t k_entity_storage_bytes = 16;
-}
-
-// Classic heap Pimpl adds an extra indirection, allocator traffic, and often worse
-// cache locality on each pointer dereference. A fixed in-object buffer removes
-// separate heap alloc/free for the impl but caps Implementation size and alignment.
-
-class Entity
+int fibonacci_sum_two_variables(std::size_t count)
 {
-private:
+	int a = 0;
+	int b = 1;
+	int sum = 0;
 
-	class Implementation;
-
-	alignas(std::max_align_t) std::array<std::byte, k_entity_storage_bytes> m_storage{};
-
-public:
-
-	Entity();
-
-	Entity(Entity && other) noexcept;
-
-	Entity & operator=(Entity && other) noexcept;
-
-	~Entity();
-
-	Entity(Entity const &) = delete;
-
-	Entity & operator=(Entity const &) = delete;
-
-	void test() const;
-
-	Implementation * get();
-
-	Implementation const * get() const;
-};
-
-class Entity::Implementation
-{
-public:
-
-	Implementation()
-		: m_value(0)
+	for (std::size_t i = 0; i < count; ++i)
 	{
+		sum += a;
+		int const c = a + b;
+		a = b;
+		b = c;
 	}
 
-	explicit Implementation(int value)
-		: m_value(value)
+	return sum;
+}
+
+int fibonacci_sum_iterator(std::size_t count)
+{
+	int sum = 0;
+
+	for (Iterator it; count > 0; --count, ++it)
 	{
+		sum += *it;
 	}
 
-	Implementation(Implementation && other) noexcept
-		: m_value(other.m_value)
-	{
-		other.m_value = 0;
-	}
-
-	void test() const
-	{
-		std::cout << "Implementation::test value=" << m_value << '\n';
-	}
-
-	int value() const
-	{
-		return m_value;
-	}
-
-	void set_value(int value)
-	{
-		m_value = value;
-	}
-
-private:
-
-	int m_value{};
-};
-
-Entity::Entity()
-{
-	static_assert(sizeof(Implementation) <= k_entity_storage_bytes);
-	static_assert(alignof(Implementation) <= alignof(std::max_align_t));
-
-	::new (m_storage.data()) Implementation();
+	return sum;
 }
-
-Entity::Entity(Entity && other) noexcept
-{
-	::new (m_storage.data()) Implementation(std::move(*other.get()));
-	std::destroy_at(other.get());
-	::new (other.m_storage.data()) Implementation();
-}
-
-Entity & Entity::operator=(Entity && other) noexcept
-{
-	if (this == &other)
-	{
-		return *this;
-	}
-
-	std::destroy_at(get());
-
-	Implementation * const source = other.get();
-	::new (m_storage.data()) Implementation(std::move(*source));
-
-	std::destroy_at(source);
-	::new (other.m_storage.data()) Implementation();
-
-	return *this;
-}
-
-Entity::~Entity()
-{
-	std::destroy_at(get());
-}
-
-void Entity::test() const
-{
-	get()->test();
-}
-
-Entity::Implementation * Entity::get()
-{
-	return std::launder(std::bit_cast<Implementation *>(m_storage.data()));
-}
-
-Entity::Implementation const * Entity::get() const
-{
-	return std::launder(std::bit_cast<Implementation const *>(m_storage.data()));
-}
+} // namespace
 
 int main()
 {
-	Entity a;
+	Iterator a;
+	Iterator b;
 
-	a.test();
+	assert(*a == 0);
+	assert(a == b);
 
-	a.get()->set_value(42);
+	++a;
 
-	a.test();
+	assert(*a == 1);
+	assert(!(a == b));
 
-	Entity b = std::move(a);
+	Iterator c = a;
+	assert(c == a);
 
-	b.test();
+	c++;
 
-	Entity c;
+	assert(*c == 1);
 
-	c = std::move(b);
+	Iterator reaches_two;
+	++reaches_two;
+	++reaches_two;
+	++reaches_two;
+	assert(*reaches_two == 2);
 
-	c.test();
+	Iterator x;
+	assert(*x == 0);
+	*x;
+	assert(*x == 0);
+
+	Iterator p;
+	Iterator q = p;
+	++p;
+	++q;
+	assert(p == q);
+
+	std::size_t const terms = 12;
+
+	assert(fibonacci_sum_two_variables(terms) == fibonacci_sum_iterator(terms));
 
 	return 0;
 }

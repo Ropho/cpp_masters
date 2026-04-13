@@ -9,3 +9,4 @@ find_package(Boost 1.65 REQUIRED)
 
 add_executable(10.04 10.04.cpp)
 target_include_directories(10.04 PRIVATE ${Boost_INCLUDE_DIRS})
+target_compile_options(10.04 PRIVATE -Wall -Wextra -Wpedantic)

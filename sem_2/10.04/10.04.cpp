@@ -2,12 +2,11 @@
 
 #include <cassert>
 #include <iostream>
-#include <string>
 
 namespace
 {
-using ull = unsigned long long;
-using matrix = boost::numeric::ublas::matrix<ull>;
+	using ull = unsigned long long;
+	using matrix = boost::numeric::ublas::matrix<ull>;
 
 matrix identity2()
 {
@@ -81,11 +80,6 @@ int main(int argc, char * argv[])
 	ull const value = fibonacci(n);
 
 	std::cout << "F(" << n << ") = " << value << '\n';
-
-	std::cout
-		<< "Matrix exponentiation uses O(log n) 2x2 multiplications; each is O(1) "
-		   "integer ops, so time O(log n) vs O(n) for linear recurrence, O(n) "
-		   "space for memoization, or O(1) time for Binet with floating error.\n";
 
 	return 0;
 }
