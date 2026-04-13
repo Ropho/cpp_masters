@@ -4,9 +4,12 @@
 #include <array>
 #include <cassert>
 #include <cstdint>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <random>
+#include <string>
+#include <tuple>
 #include <unordered_map>
 #include <vector>
 

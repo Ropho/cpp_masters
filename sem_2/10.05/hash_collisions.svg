@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" font-family="system-ui,Segoe UI,sans-serif" font-size="13">
+<rect width="100%" height="100%" fill="#fafafa"/>
+<text x="450" y="28" text-anchor="middle" font-size="17" font-weight="600">Hash collisions vs number of strings (Partow, 32-bit)</text>
+<rect x="72" y="48" width="788" height="416" fill="#fff" stroke="#ccc"/>
+<line x1="72" y1="360.0" x2="860" y2="360.0" stroke="#eee"/>
+<text x="64" y="364.0" text-anchor="end" fill="#555">23</text>
+<line x1="72" y1="256.0" x2="860" y2="256.0" stroke="#eee"/>
+<text x="64" y="260.0" text-anchor="end" fill="#555">46</text>
+<line x1="72" y1="152.0" x2="860" y2="152.0" stroke="#eee"/>
+<text x="64" y="156.0" text-anchor="end" fill="#555">70</text>
+<text x="466" y="506" text-anchor="middle" fill="#333">N (strings)</text>
+<text transform="translate(22,256) rotate(-90)" text-anchor="middle" fill="#333">Pairwise collisions</text>
+<line x1="74.2" y1="464" x2="74.2" y2="469" stroke="#333"/>
+<text x="74.2" y="484" text-anchor="middle" fill="#555">500</text>
+<line x1="159.6" y1="464" x2="159.6" y2="469" stroke="#333"/>
+<text x="159.6" y="484" text-anchor="middle" fill="#555">20000</text>
+<line x1="860.0" y1="464" x2="860.0" y2="469" stroke="#333"/>
+<text x="860.0" y="484" text-anchor="middle" fill="#555">180000</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2" points="74.2,464.0 76.4,464.0 82.9,464.0 93.9,464.0 115.8,464.0 159.6,464.0 247.1,464.0 422.2,455.1 597.3,455.1 860.0,446.1" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="2" points="74.2,464.0 76.4,464.0 82.9,464.0 93.9,464.0 115.8,464.0 159.6,464.0 247.1,464.0 422.2,459.5 597.3,459.5 860.0,455.1" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="2" points="74.2,464.0 76.4,464.0 82.9,464.0 93.9,464.0 115.8,459.5 159.6,459.5 247.1,441.6 422.2,388.0 597.3,271.7 860.0,48.0" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline fill="none" stroke="#d62728" stroke-width="2" points="74.2,464.0 76.4,464.0 82.9,464.0 93.9,464.0 115.8,459.5 159.6,459.5 247.1,441.6 422.2,388.0 597.3,271.7 860.0,48.0" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline fill="none" stroke="#9467bd" stroke-width="2" points="74.2,464.0 76.4,464.0 82.9,464.0 93.9,464.0 115.8,464.0 159.6,464.0 247.1,464.0 422.2,459.5 597.3,459.5 860.0,450.6" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline fill="none" stroke="#8c564b" stroke-width="2" points="74.2,464.0 76.4,464.0 82.9,464.0 93.9,464.0 115.8,464.0 159.6,464.0 247.1,464.0 422.2,464.0 597.3,450.6 860.0,437.2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline fill="none" stroke="#e377c2" stroke-width="2" points="74.2,464.0 76.4,464.0 82.9,464.0 93.9,464.0 115.8,464.0 159.6,464.0 247.1,459.5 422.2,459.5 597.3,446.1 860.0,441.6" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline fill="none" stroke="#7f7f7f" stroke-width="2" points="74.2,464.0 76.4,464.0 82.9,464.0 93.9,464.0 115.8,464.0 159.6,464.0 247.1,459.5 422.2,455.1 597.3,441.6 860.0,419.3" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline fill="none" stroke="#bcbd22" stroke-width="2" points="74.2,464.0 76.4,464.0 82.9,464.0 93.9,464.0 115.8,464.0 159.6,464.0 247.1,459.5 422.2,455.1 597.3,450.6 860.0,446.1" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="772" y1="62" x2="792" y2="62" stroke="#1f77b4" stroke-width="3"/>
+<text x="796" y="66" fill="#222">RS</text>
+<line x1="772" y1="80" x2="792" y2="80" stroke="#ff7f0e" stroke-width="3"/>
+<text x="796" y="84" fill="#222">JS</text>
+<line x1="772" y1="98" x2="792" y2="98" stroke="#2ca02c" stroke-width="3"/>
+<text x="796" y="102" fill="#222">PJW</text>
+<line x1="772" y1="116" x2="792" y2="116" stroke="#d62728" stroke-width="3"/>
+<text x="796" y="120" fill="#222">ELF</text>
+<line x1="772" y1="134" x2="792" y2="134" stroke="#9467bd" stroke-width="3"/>
+<text x="796" y="138" fill="#222">BKDR</text>
+<line x1="772" y1="152" x2="792" y2="152" stroke="#8c564b" stroke-width="3"/>
+<text x="796" y="156" fill="#222">SDBM</text>
+<line x1="772" y1="170" x2="792" y2="170" stroke="#e377c2" stroke-width="3"/>
+<text x="796" y="174" fill="#222">DJB</text>
+<line x1="772" y1="188" x2="792" y2="188" stroke="#7f7f7f" stroke-width="3"/>
+<text x="796" y="192" fill="#222">DEK</text>
+<line x1="772" y1="206" x2="792" y2="206" stroke="#bcbd22" stroke-width="3"/>
+<text x="796" y="210" fill="#222">AP</text>
+</svg>
