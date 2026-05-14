@@ -1,0 +1,40 @@
+❯ ./build/13.04  .
+filter (regex): .
+directory: /Users/ropho/code/cpp_masters/sem_2/13.04
+
+show : entry : f | rw- |  272 (B) | 2026-05-14 23:06:08 | CMakeLists.txt
+show : entry : f | rw- |    6 (K) | 2026-05-14 23:06:20 | 13.18.cpp
+show : entry : f | rw- |    1 (K) | 2026-05-14 23:08:55 | example.txt
+show : entry : d | rwx |    2 (M) | 2026-05-14 23:07:49 | build
+
+Сравнение с grep:
+  • Здесь фильтруются только имена файлов в одной директории (не рекурсивно).
+  • По умолчанию используется std::regex_search — как типичный вывод
+    «ls | grep ШАБЛОН»: вхождение шаблона где-либо в имени.
+  • std::regex использует синтаксис ECMAScript (ближе к grep -E / egrep).
+  • У grep свой диалект BRE/ERE, флаги -i, -w, -x, -F и т.д.; у C++
+    отдельные std::regex_constants (icase, и т.п.) настраиваются в коде.
+  • Для рекурсивного обхода в grep обычно: grep -r или find ... -exec;
+    здесь при необходимости можно заменить directory_iterator на
+    recursive_directory_iterator.
+
+
+
+
+❯ ./build/13.04  '.txt' .
+filter (regex): .txt
+directory: .
+
+show : entry : f | rw- |  272 (B) | 2026-05-14 23:06:08 | CMakeLists.txt
+show : entry : f | rw- |    1 (K) | 2026-05-14 23:09:36 | example.txt
+
+Сравнение с grep:
+  • Здесь фильтруются только имена файлов в одной директории (не рекурсивно).
+  • По умолчанию используется std::regex_search — как типичный вывод
+    «ls | grep ШАБЛОН»: вхождение шаблона где-либо в имени.
+  • std::regex использует синтаксис ECMAScript (ближе к grep -E / egrep).
+  • У grep свой диалект BRE/ERE, флаги -i, -w, -x, -F и т.д.; у C++
+    отдельные std::regex_constants (icase, и т.п.) настраиваются в коде.
+  • Для рекурсивного обхода в grep обычно: grep -r или find ... -exec;
+    здесь при необходимости можно заменить directory_iterator на
+    recursive_directory_iterator.
